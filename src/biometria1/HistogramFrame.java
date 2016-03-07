@@ -70,6 +70,30 @@ public class HistogramFrame extends javax.swing.JFrame {
     
     z.repaint();
     }
+    private void przyciemnij(){
+        short[] red = new short[256];
+        short[] green = new short[256];
+        short[] blue = new short[256];
+        for (short i = 0; i < 256; i++) {
+
+            if(i>200)red[i]=green[i]=blue[i] = (short) (i-Math.log(i));
+            else{
+                red[i]=green[i]=blue[i]=i;
+            }
+        }
+
+        short[][] data = new short[][] {
+             red, green, blue
+        };
+        
+                LookupTable lookupTable = new ShortLookupTable(0, data);
+                LookupOp op = new LookupOp(lookupTable, null);
+                imageBoxer.image=ImageBoxer.convertColorspace(imageBoxer.image,BufferedImage.TYPE_INT_RGB);
+                imageBoxer.image=op.filter(imageBoxer.image, null);
+                imageBoxer.repaint();
+    }
+    
+    
     private void przelicz(){
                 Color temp;
                 Arrays.fill(histR, (short)0);
@@ -90,26 +114,6 @@ public class HistogramFrame extends javax.swing.JFrame {
                 rysujWykres(hB,histB,Color.BLUE);
                 rysujWykres(hRGB,histRGB,Color.BLACK);
                 
-short[] red = new short[256];
-short[] green = new short[256];
-short[] blue = new short[256];
-for (short i = 0; i < 256; i++) {
-    
-    if(i>200)red[i]=green[i]=blue[i] = (short) (i-Math.log(i));
-    else{
-        red[i]=green[i]=blue[i]=i;
-    }
-}
-
-short[][] data = new short[][] {
-     red, green, blue
-};
-
-                LookupTable lookupTable = new ShortLookupTable(0, data);
-                LookupOp op = new LookupOp(lookupTable, null);
-                imageBoxer.image=ImageBoxer.convertColorspace(imageBoxer.image,BufferedImage.TYPE_INT_RGB);
-                imageBoxer.image=op.filter(imageBoxer.image, null);
-                imageBoxer.repaint();
                 //hR.image=new BufferedImage(255,getMax(histR),BufferedImage.TYPE_INT_ARGB);
                 //hG.image=new BufferedImage(255,getMax(histG),BufferedImage.TYPE_INT_ARGB);
                 //hB.image=new BufferedImage(255,getMax(histB),BufferedImage.TYPE_INT_ARGB);
@@ -126,14 +130,15 @@ short[][] data = new short[][] {
 
         imageBoxer2 = new biometria1.ImageBoxer();
         jLabel1 = new javax.swing.JLabel();
+        hR = new biometria1.ImageBoxer();
         jLabel2 = new javax.swing.JLabel();
+        hG = new biometria1.ImageBoxer();
         jLabel3 = new javax.swing.JLabel();
+        hB = new biometria1.ImageBoxer();
         jLabel4 = new javax.swing.JLabel();
         hRGB = new biometria1.ImageBoxer();
         jButton1 = new javax.swing.JButton();
-        hR = new biometria1.ImageBoxer();
-        hG = new biometria1.ImageBoxer();
-        hB = new biometria1.ImageBoxer();
+        jButton2 = new javax.swing.JButton();
 
         javax.swing.GroupLayout imageBoxer2Layout = new javax.swing.GroupLayout(imageBoxer2);
         imageBoxer2.setLayout(imageBoxer2Layout);
@@ -150,30 +155,6 @@ short[][] data = new short[][] {
 
         jLabel1.setText("Histogram Red");
 
-        jLabel2.setText("Histogram Green");
-
-        jLabel3.setText("Histogram Blue");
-
-        jLabel4.setText("HistogramRGB");
-
-        javax.swing.GroupLayout hRGBLayout = new javax.swing.GroupLayout(hRGB);
-        hRGB.setLayout(hRGBLayout);
-        hRGBLayout.setHorizontalGroup(
-            hRGBLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 255, Short.MAX_VALUE)
-        );
-        hRGBLayout.setVerticalGroup(
-            hRGBLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-
-        jButton1.setText("Przelicz");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
         hR.setMinimumSize(new java.awt.Dimension(255, 100));
         hR.setPreferredSize(new java.awt.Dimension(255, 100));
 
@@ -188,6 +169,8 @@ short[][] data = new short[][] {
             .addGap(0, 100, Short.MAX_VALUE)
         );
 
+        jLabel2.setText("Histogram Green");
+
         javax.swing.GroupLayout hGLayout = new javax.swing.GroupLayout(hG);
         hG.setLayout(hGLayout);
         hGLayout.setHorizontalGroup(
@@ -196,8 +179,10 @@ short[][] data = new short[][] {
         );
         hGLayout.setVerticalGroup(
             hGLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 100, Short.MAX_VALUE)
         );
+
+        jLabel3.setText("Histogram Blue");
 
         javax.swing.GroupLayout hBLayout = new javax.swing.GroupLayout(hB);
         hB.setLayout(hBLayout);
@@ -207,8 +192,35 @@ short[][] data = new short[][] {
         );
         hBLayout.setVerticalGroup(
             hBLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 102, Short.MAX_VALUE)
+            .addGap(0, 100, Short.MAX_VALUE)
         );
+
+        jLabel4.setText("HistogramRGB");
+
+        javax.swing.GroupLayout hRGBLayout = new javax.swing.GroupLayout(hRGB);
+        hRGB.setLayout(hRGBLayout);
+        hRGBLayout.setHorizontalGroup(
+            hRGBLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 255, Short.MAX_VALUE)
+        );
+        hRGBLayout.setVerticalGroup(
+            hRGBLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+
+        jButton1.setText("Przelicz");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setText("jButton2");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -216,80 +228,57 @@ short[][] data = new short[][] {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel1)
+                    .addComponent(hR, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel2)
+                    .addComponent(hG, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel3)
+                    .addComponent(hB, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2))
-                        .addGap(0, 161, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(2, 2, 2)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(8, 8, 8)
-                                        .addComponent(jLabel4)
-                                        .addGap(0, 0, Short.MAX_VALUE))
-                                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING))
-                                .addContainerGap())
+                                .addGap(8, 8, 8)
+                                .addComponent(jLabel4))
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(5, 5, 5)
-                                .addComponent(hRGB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(307, Short.MAX_VALUE))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addGap(0, 0, Short.MAX_VALUE))))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(295, 295, 295)
-                    .addComponent(hR, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGap(296, 296, 296)))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(423, 423, 423)
-                    .addComponent(hG, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(423, Short.MAX_VALUE)))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(289, 289, 289)
-                    .addComponent(hB, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGap(290, 290, 290)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(hRGB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton1)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel4))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel4))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(hR, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(26, 26, 26)
+                        .addComponent(hRGB, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(hRGB, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton1))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(112, 112, 112)
                         .addComponent(jLabel2)
-                        .addGap(118, 118, 118)
-                        .addComponent(jLabel3)
-                        .addGap(0, 120, Short.MAX_VALUE)))
-                .addContainerGap())
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(156, 156, 156)
-                    .addComponent(hR, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGap(157, 157, 157)))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(206, 206, 206)
-                    .addComponent(hG, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(207, Short.MAX_VALUE)))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(155, 155, 155)
-                    .addComponent(hB, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGap(156, 156, 156)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(hG, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jButton1)
+                        .addComponent(jButton2)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(hB, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -301,6 +290,11 @@ short[][] data = new short[][] {
         
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        przyciemnij();
+    }//GEN-LAST:event_jButton2ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -311,6 +305,7 @@ short[][] data = new short[][] {
     private biometria1.ImageBoxer hRGB;
     private biometria1.ImageBoxer imageBoxer2;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
