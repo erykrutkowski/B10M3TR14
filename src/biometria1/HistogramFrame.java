@@ -43,13 +43,13 @@ public class HistogramFrame extends javax.swing.JFrame {
     int tempmax=getMax(hist);
     BufferedImage h=new BufferedImage(256+1,tempmax+1,BufferedImage.TYPE_INT_ARGB);
     for(int i=0; i<256; i++){
-        for(int j=hist[i];j>tempmax;j++){
+        for(int j=tempmax-hist[i];j<tempmax;j++){
             h.setRGB(i,j, c.getRGB());
         }
     }
     z.image=h;
-    //z.scalexy=true;
-    //z.scaley=(double)1/(double)(tempmax/z.getHeight());
+    z.scalexy=true;
+    z.scaley=(double)1/(double)(tempmax/z.getHeight());
     System.out.println(z.scaley+" "+tempmax);
     z.repaint();
     }
