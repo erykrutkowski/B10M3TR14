@@ -7,7 +7,11 @@ package biometria1;
 
 /**
  *
+<<<<<<< HEAD
  * @author antek
+=======
+ * @author rryk
+>>>>>>> origin/master
  */
 public class ColorFrame extends javax.swing.JFrame {
 

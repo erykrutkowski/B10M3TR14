@@ -11,7 +11,11 @@ import java.awt.image.BufferedImage;
 
 /**
  *
+<<<<<<< HEAD
  * @author antek
+=======
+ * @author rryk
+>>>>>>> origin/master
  */
 public class ImageBoxer extends javax.swing.JPanel {
 
