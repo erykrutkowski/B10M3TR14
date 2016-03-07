@@ -48,6 +48,9 @@ public class HistogramFrame extends javax.swing.JFrame {
         }
     }
     z.image=h;
+    z.scalexy=true;
+    z.scaley=(double)1/(double)(tempmax/z.getHeight());
+    System.out.println(z.scaley+" "+tempmax);
     z.repaint();
     }
     private void przelicz(){

@@ -24,11 +24,16 @@ public class ImageBoxer extends javax.swing.JPanel {
      */
     public BufferedImage image;
     public int scale;
+    public double scalex,scaley;
+    boolean scalexy;
     private int corX,tempcorX;
     private int corY,tempcorY;
     public Graphics2D g2d;
     public ImageBoxer() {
+            scalexy=false;
           scale=1;
+          scalex=1;
+          scaley=1;
           corX=0;
           corY=0;
           tempcorX=0;
@@ -93,7 +98,8 @@ public class ImageBoxer extends javax.swing.JPanel {
 	@Override
 	public void paintComponent(Graphics g) {
 		g2d = (Graphics2D) g;
-                g2d.scale(scale, scale);
+                if(scalexy==false){scalex=scale; scaley=scale;}
+                g2d.scale(scalex, scaley);
 		g2d.drawImage(image, 0-(corX+tempcorX), 0-(corY+tempcorY), this);
 	}
                 
