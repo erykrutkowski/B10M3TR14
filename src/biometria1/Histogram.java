@@ -26,23 +26,23 @@ public class Histogram extends javax.swing.JFrame {
     public Histogram(ImageBoxer Boxer) {
         super("ColorChooser");
         initComponents();
-        histR=new int[255];
-        histG=new int[255];
-        histB=new int[255];
-        histRGB=new int[255];
+        histR=new int[256];
+        histG=new int[256];
+        histB=new int[256];
+        histRGB=new int[256];
         imageBoxer = Boxer; 
     }
     private int getMax(int hist[]){
         int tempmax=0;
-        for (int i=0; i<255;i++){
+        for (int i=0; i<256;i++){
             if(hist[i]>tempmax)tempmax=hist[i];
         }
         return tempmax;
     }
     private void rysujWykres(BufferedImage h, int hist[], Color c){
     int tempmax=getMax(hist);
-    h=new BufferedImage(255,tempmax,BufferedImage.TYPE_INT_ARGB);
-    for(int i=0; i<255; i++){
+    h=new BufferedImage(256,tempmax,BufferedImage.TYPE_INT_ARGB);
+    for(int i=0; i<256; i++){
         for(int j=tempmax;j>0;j--){
             h.setRGB(i,tempmax-j, c.getRGB());
         }
