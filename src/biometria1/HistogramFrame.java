@@ -24,7 +24,7 @@ public class HistogramFrame extends javax.swing.JFrame {
     int histB[];
     int histRGB[];
     public HistogramFrame(ImageBoxer Boxer) {
-        super("ColorChooser");
+        super("Histogram");
         initComponents();
         histR=new int[256];
         histG=new int[256];
@@ -49,8 +49,8 @@ public class HistogramFrame extends javax.swing.JFrame {
     }
     z.image=h;
     z.scalexy=true;
-    z.scaley=(double)1/(double)(tempmax/z.getHeight());
-    System.out.println(z.scaley+" "+tempmax);
+    z.scaley=1.0/(((double)tempmax/(double)z.getHeight()));
+    //System.out.println(z.scaley+" "+tempmax+" "+z.getHeight());
     z.repaint();
     }
     private void przelicz(){
