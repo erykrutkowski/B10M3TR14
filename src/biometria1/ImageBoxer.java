@@ -5,8 +5,11 @@
  */
 package biometria1;
 
+import static java.awt.AlphaComposite.CLEAR;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorConvertOp;
 
@@ -114,10 +117,12 @@ final public static BufferedImage convertColorspace(
             scale/=2;
             repaint();
         }
-    }    
+    }
+
 	@Override
 	public void paintComponent(Graphics g) {
 		g2d = (Graphics2D) g;
+                super.paintComponent(g2d);
                 if(scalexy==false){scalex=scale; scaley=scale;}
                 g2d.scale(scalex, scaley);
 		g2d.drawImage(image, 0-(corX+tempcorX), 0-(corY+tempcorY), this);
