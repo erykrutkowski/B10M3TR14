@@ -13,7 +13,7 @@ import java.awt.image.Raster;
  *
  * @author rryk
  */
-public class Histogram extends javax.swing.JFrame {
+public class HistogramFrame extends javax.swing.JFrame {
 
     /**
      * Creates new form Histogram
@@ -23,7 +23,7 @@ public class Histogram extends javax.swing.JFrame {
     int histG[];
     int histB[];
     int histRGB[];
-    public Histogram(ImageBoxer Boxer) {
+    public HistogramFrame(ImageBoxer Boxer) {
         super("ColorChooser");
         initComponents();
         histR=new int[255];
