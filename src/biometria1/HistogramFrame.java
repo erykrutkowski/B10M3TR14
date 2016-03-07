@@ -92,28 +92,41 @@ public class HistogramFrame extends javax.swing.JFrame {
                 imageBoxer.image=op.filter(imageBoxer.image, null);
                 imageBoxer.repaint();
     }
-    private void przytnij(short a, short b){
+    private void przytnij(){
+        short a=3;
+        short b=252;
         short[] red = new short[256];
         short[] green = new short[256];
         short[] blue = new short[256];
         for (short i = 0; i < 256; i++) {
 
-            if((i<a)&&(i>b))red[i]=green[i]=blue[i] = (short) (0);
-            else{
-                red[i]=green[i]=blue[i]=i;
-            }
+            //if((i>a)&&(i<b)){
+                //red[i]=green[i]=blue[i]=i;
+                                short k=(short)(((255-b)-(i%(255-b)))-(a-(i%a)));
+                System.out.println(i+" "+k);
+                if(i<(short)((a+b)/2)){
+                    if(i-(a-(i%a))>0) red[i]=green[i]=blue[i]=(short)(i-(a-(i%a)));
+                    else red[i]=green[i]=blue[i]=(short)0;
+                }
+                else {
+                    if(i+((255-b)-(i%(255-b)))<256)red[i]=green[i]=blue[i]=(short)(i+((255-b)-(i%(255-b))));
+                    else red[i]=green[i]=blue[i]=(short)256;
+                }
+            //}
+            //else{
+             //  red[i]=green[i]=blue[i]=(short)(255-i);
+
+            //}
         }
 
         short[][] data = new short[][] {
              red, green, blue
         };
-        
                 LookupTable lookupTable = new ShortLookupTable(0, data);
-                LookupOp op = new LookupOp(lookupTable, null);
-                
+                LookupOp op = new LookupOp(lookupTable, null);            
                 imageBoxer.image=ImageBoxer.convertColorspace(imageBoxer.image,BufferedImage.TYPE_INT_RGB);
-                BufferedImage temp=imageBoxer.image;
-                imageBoxer.image=op.filter(imageBoxer.image, null);
+                //BufferedImage temp=imageBoxer.image;
+                imageBoxer.image=op.filter(imageBoxer.image, imageBoxer.image);
                 imageBoxer.repaint();
     }
     
@@ -315,7 +328,7 @@ public class HistogramFrame extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        przyciemnij();
+        przytnij();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
