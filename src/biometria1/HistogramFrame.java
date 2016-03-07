@@ -7,7 +7,11 @@ package biometria1;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.awt.image.LookupOp;
+import java.awt.image.LookupTable;
 import java.awt.image.Raster;
+import java.awt.image.ShortLookupTable;
+import java.util.Arrays;
 
 /**
  *
@@ -19,27 +23,38 @@ public class HistogramFrame extends javax.swing.JFrame {
      * Creates new form Histogram
      */
     ImageBoxer imageBoxer;    
-    int histR[];
-    int histG[];
-    int histB[];
-    int histRGB[];
+    short histR[];
+    short histG[];
+    short histB[];
+    short histRGB[];
+    short blank[];
+    //short data[][];
+    LookupOp lookup;
     public HistogramFrame(ImageBoxer Boxer) {
         super("Histogram");
         initComponents();
-        histR=new int[256];
-        histG=new int[256];
-        histB=new int[256];
-        histRGB=new int[256];
-        imageBoxer = Boxer; 
+        histR=new short[256];
+        histG=new short[256];
+        histB=new short[256];
+        blank=new short[256];
+        Arrays.fill(histR, (short)0);
+        Arrays.fill(histG, (short)0);
+        Arrays.fill(histB, (short)0);
+        Arrays.fill(blank, (short)0);
+
+        //data = new short[3][256];
+        //data ={histR; blank; blank};
+        histRGB=new short[256];
+        imageBoxer = Boxer;
     }
-    private int getMax(int hist[]){
+    private int getMax(short hist[]){
         int tempmax=0;
         for (int i=0; i<256;i++){
             if(hist[i]>tempmax)tempmax=hist[i];
         }
         return tempmax;
     }
-    private void rysujWykres(ImageBoxer z, int hist[], Color c){
+    private void rysujWykres(ImageBoxer z, short hist[], Color c){
     int tempmax=getMax(hist);
     BufferedImage h=new BufferedImage(256+1,tempmax+1,BufferedImage.TYPE_INT_ARGB);
     for(int i=0; i<256; i++){
@@ -51,10 +66,15 @@ public class HistogramFrame extends javax.swing.JFrame {
     z.scalexy=true;
     z.scaley=1.0/(((double)tempmax/(double)z.getHeight()));
     //System.out.println(z.scaley+" "+tempmax+" "+z.getHeight());
+    
     z.repaint();
     }
     private void przelicz(){
                 Color temp;
+                Arrays.fill(histR, (short)0);
+                Arrays.fill(histG, (short)0);
+                Arrays.fill(histB, (short)0);
+                Arrays.fill(histRGB, (short)0);
                 for (int j=0; j<imageBoxer.image.getHeight(); j++){
                     for (int i=0; i<imageBoxer.image.getWidth();i++){
                         temp=new Color(imageBoxer.image.getRGB(i, j));
@@ -68,6 +88,26 @@ public class HistogramFrame extends javax.swing.JFrame {
                 rysujWykres(hG,histG,Color.GREEN);
                 rysujWykres(hB,histB,Color.BLUE);
                 rysujWykres(hRGB,histRGB,Color.BLACK);
+short[] red = new short[256];
+short[] green = new short[256];
+short[] blue = new short[256];
+for (short i = 0; i < 256; i++) {
+    
+    if(i>200)red[i]=green[i]=blue[i] = (short) (i-Math.log(i));
+    else{
+        red[i]=green[i]=blue[i]=i;
+    }
+}
+
+short[][] data = new short[][] {
+     red, green, blue
+};
+
+                LookupTable lookupTable = new ShortLookupTable(0, data);
+                LookupOp op = new LookupOp(lookupTable, null);
+                imageBoxer.image=ImageBoxer.convertColorspace(imageBoxer.image,BufferedImage.TYPE_INT_RGB);
+                imageBoxer.image=op.filter(imageBoxer.image, null);
+                imageBoxer.repaint();
                 //hR.image=new BufferedImage(255,getMax(histR),BufferedImage.TYPE_INT_ARGB);
                 //hG.image=new BufferedImage(255,getMax(histG),BufferedImage.TYPE_INT_ARGB);
                 //hB.image=new BufferedImage(255,getMax(histB),BufferedImage.TYPE_INT_ARGB);

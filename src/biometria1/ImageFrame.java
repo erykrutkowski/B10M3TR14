@@ -19,6 +19,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  *
  * @author antek
  */
+
 public class ImageFrame extends javax.swing.JFrame {
 
     /**
@@ -98,9 +99,19 @@ public class ImageFrame extends javax.swing.JFrame {
         jMenu3.add(jMenuItem1);
 
         jMenuItem2.setText("Save");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
         jMenu3.add(jMenuItem2);
 
         jMenuItem3.setText("Close");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
         jMenu3.add(jMenuItem3);
 
         jMenuBar2.add(jMenu3);
@@ -108,6 +119,11 @@ public class ImageFrame extends javax.swing.JFrame {
         jMenu4.setText("Zadanie");
 
         jMenuItem4.setText("Zadanie1");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
         jMenu4.add(jMenuItem4);
 
         jMenuItem5.setText("Zadanie2");
