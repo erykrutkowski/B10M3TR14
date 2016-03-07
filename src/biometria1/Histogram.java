@@ -6,6 +6,7 @@
 package biometria1;
 
 import java.awt.Color;
+import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
 
 /**
@@ -29,8 +30,21 @@ public class Histogram extends javax.swing.JFrame {
         histB=new int[255];
         imageBoxer = Boxer; 
     }
-    private void getMax(int hist[]){
-        
+    private int getMax(int hist[]){
+        int tempmax=0;
+        for (int i=0; i<255;i++){
+            if(hist[i]>tempmax)tempmax=hist[i];
+        }
+        return tempmax;
+    }
+    private void rysujWykres(BufferedImage h, int hist[], Color c){
+    int tempmax=getMax(hist);
+    h=new BufferedImage(255,tempmax,BufferedImage.TYPE_INT_ARGB);
+    for(int i=0; i<255; i++){
+        for(int j=tempmax;j>0;j--){
+            h.setRGB(i,tempmax-j, c.getRGB());
+        }
+    }
     }
     private void przelicz(){
                 Color temp;
@@ -42,7 +56,13 @@ public class Histogram extends javax.swing.JFrame {
                         histB[temp.getBlue()]++;
                     }
                 }
-                
+                rysujWykres(hR.image,histR,Color.RED);
+                rysujWykres(hG.image,histG,Color.GREEN);
+                rysujWykres(hB.image,histB,Color.BLUE);
+
+                //hR.image=new BufferedImage(255,getMax(histR),BufferedImage.TYPE_INT_ARGB);
+                //hG.image=new BufferedImage(255,getMax(histG),BufferedImage.TYPE_INT_ARGB);
+                //hB.image=new BufferedImage(255,getMax(histB),BufferedImage.TYPE_INT_ARGB);
     }
 
     /**
@@ -156,38 +176,6 @@ public class Histogram extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Histogram.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Histogram.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Histogram.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Histogram.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Histogram().setVisible(true);
-            }
-        });
-    }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private biometria1.ImageBoxer hB;
     private biometria1.ImageBoxer hG;
