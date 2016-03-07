@@ -26,27 +26,29 @@ public class HistogramFrame extends javax.swing.JFrame {
     public HistogramFrame(ImageBoxer Boxer) {
         super("ColorChooser");
         initComponents();
-        histR=new int[255];
-        histG=new int[255];
-        histB=new int[255];
-        histRGB=new int[255];
+        histR=new int[256];
+        histG=new int[256];
+        histB=new int[256];
+        histRGB=new int[256];
         imageBoxer = Boxer; 
     }
     private int getMax(int hist[]){
         int tempmax=0;
-        for (int i=0; i<255;i++){
+        for (int i=0; i<256;i++){
             if(hist[i]>tempmax)tempmax=hist[i];
         }
         return tempmax;
     }
-    private void rysujWykres(BufferedImage h, int hist[], Color c){
+    private void rysujWykres(ImageBoxer z, int hist[], Color c){
     int tempmax=getMax(hist);
-    h=new BufferedImage(255,tempmax,BufferedImage.TYPE_INT_ARGB);
-    for(int i=0; i<255; i++){
+    BufferedImage h=new BufferedImage(256,tempmax,BufferedImage.TYPE_INT_ARGB);
+    for(int i=0; i<256; i++){
         for(int j=tempmax;j>0;j--){
             h.setRGB(i,tempmax-j, c.getRGB());
         }
     }
+    z.image=h;
+    z.repaint();
     }
     private void przelicz(){
                 Color temp;
@@ -59,10 +61,10 @@ public class HistogramFrame extends javax.swing.JFrame {
                         histRGB[(temp.getRed()+temp.getGreen()+temp.getBlue())/3]++;
                     }
                 }
-                rysujWykres(hR.image,histR,Color.RED);
-                rysujWykres(hG.image,histG,Color.GREEN);
-                rysujWykres(hB.image,histB,Color.BLUE);
-                rysujWykres(hRGB.image,histRGB,Color.BLACK);
+                rysujWykres(hR,histR,Color.RED);
+                rysujWykres(hG,histG,Color.GREEN);
+                rysujWykres(hB,histB,Color.BLUE);
+                rysujWykres(hRGB,histRGB,Color.BLACK);
                 //hR.image=new BufferedImage(255,getMax(histR),BufferedImage.TYPE_INT_ARGB);
                 //hG.image=new BufferedImage(255,getMax(histG),BufferedImage.TYPE_INT_ARGB);
                 //hB.image=new BufferedImage(255,getMax(histB),BufferedImage.TYPE_INT_ARGB);
@@ -194,26 +196,28 @@ public class HistogramFrame extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1)
                             .addComponent(jLabel4))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(hR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(hRGB, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(hR, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(26, 26, 26)
+                        .addComponent(hRGB, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(hG, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(hG, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(jButton1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(hB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(hB, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -222,6 +226,7 @@ public class HistogramFrame extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         przelicz();
+        
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
