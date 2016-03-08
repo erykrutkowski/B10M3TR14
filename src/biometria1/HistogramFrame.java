@@ -6,6 +6,7 @@
 package biometria1;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.LookupOp;
 import java.awt.image.LookupTable;
@@ -57,11 +58,18 @@ public class HistogramFrame extends javax.swing.JFrame {
     private void rysujWykres(ImageBoxer z, short hist[], Color c){
     int tempmax=getMax(hist);
     BufferedImage h=new BufferedImage(256+1,tempmax+1,BufferedImage.TYPE_INT_ARGB);
+    Graphics2D g2d = h.createGraphics();
+    g2d.setColor(c);
+
     for(int i=0; i<256; i++){
-        for(int j=tempmax-hist[i];j<tempmax;j++){
-            h.setRGB(i,j, c.getRGB());
-        }
+        //for(int j=tempmax-hist[i];j<tempmax;j++){
+            //h.setRGB(i,j, c.getRGB());
+        //}
+        //zamienilem na rysowanie liniami zeby bylo szybciej przy duzych 
+        g2d.drawLine(i, tempmax-hist[i], i, tempmax);
     }
+    g2d.drawImage(h, null, 0, 0);
+
    // z.image=null;
     z.image=h;
     z.scalexy=true;
@@ -70,6 +78,7 @@ public class HistogramFrame extends javax.swing.JFrame {
     
     z.repaint();
     }
+    
     private void przyciemnij(){
         short[] red = new short[256];
         short[] green = new short[256];
@@ -92,27 +101,33 @@ public class HistogramFrame extends javax.swing.JFrame {
                 imageBoxer.image=op.filter(imageBoxer.image, null);
                 imageBoxer.repaint();
     }
-    private void przytnij(){
+        private int getMaxHist(short hist[], int begin){
+        for(int i=255;i>=begin;i--){
+            if(hist[i]>0){
+                return i;
+            }
+        }
+        return 255;
+    }
+    private int getMinHist(short hist[], int begin){
+        for(int i=begin;i<256;i++){
+            if(hist[i]>0){
+                return i;
+            }
+        }
+        return 0;
+    }
+    private void rozciagnij(){
         short a=2;
         short b=253;
         short[] red = new short[256];
         short[] green = new short[256];
         short[] blue = new short[256];
         for (short i = 0; i < 256; i++) {
-
-            //if((i>a)&&(i<b)){
-                //red[i]=green[i]=blue[i]=i;
-                                short k;
-                if(i<(short)((a+b)/2)){
-                    k=(short)(a-(i/(((a+b)/2)/a)));//(((a+b)/2)/a)(a-(i%a)));
-                    if(i-k>0) red[i]=green[i]=blue[i]=(short)(i-k);
-                    else red[i]=green[i]=blue[i]=(short)0;
-                }
-                else {
-                    k=(short)((255-b)-(i/(((a+b)/2)/(255-b))));
-                    if(i-k<256)red[i]=green[i]=blue[i]=(short)(i-k);
-                    else red[i]=green[i]=blue[i]=(short)256;
-                }
+                red[i]=green[i]=blue[i]= (short)(((float)255/(b-a))*(i-a));
+                //green[i]=(short)(((float)255/(getMaxHist(histG,b)-getMinHist(histG,a)))*(i-getMinHist(histG,a)));
+                //blue[i]=(short)(((float)255/(getMaxHist(histB,b)-getMinHist(histB,a)))*(i-getMinHist(histB,a)));
+                System.out.println(i+" "+(((float)255/(getMaxHist(histB,b)-getMinHist(histB,a)))*(i-getMinHist(histB,a))));
                                 //System.out.println(i+" "+k);
 
             //}
@@ -131,6 +146,62 @@ public class HistogramFrame extends javax.swing.JFrame {
                 //BufferedImage temp=imageBoxer.image;
                 imageBoxer.image=op.filter(imageBoxer.image, imageBoxer.image);
                 imageBoxer.repaint();
+                normalizuj();
+    }
+    
+    private float [] cdfxFunction(short hist[]){
+        int n=imageBoxer.image.getHeight()*imageBoxer.image.getWidth();
+        float cdfx[]=new float[256];
+        Arrays.fill(cdfx,0);
+        for (int i=0;i<256;i++){
+            if(i>0)cdfx[i]+=(float)cdfx[i-1];
+            cdfx[i]+=(float)hist[i]/n;
+        }
+        return cdfx;
+    }
+    private float getMinCdfx(float cdfx[]){
+        for(int i=0;i<256;i++){
+            if(cdfx[i]>0){
+                return (float)cdfx[i];
+            }
+        }
+        return (float)0;
+    }
+
+    private void normalizuj(){
+        //short hist[]=new short[256];
+        ///hist=histR;
+        float cdfxR[]=new float [256];
+        float cdfxG[]=new float [256];
+        float cdfxB[]=new float [256];
+        cdfxR = cdfxFunction(histR);
+        cdfxG = cdfxFunction(histG);
+        cdfxB = cdfxFunction(histB);
+        float minCdfxR=getMinCdfx(cdfxR);
+        float minCdfxG=getMinCdfx(cdfxR);
+        float minCdfxB=getMinCdfx(cdfxR);
+        short[] red = new short[256];
+        short[] green = new short[256];
+        short[] blue = new short[256];
+        for (short i = 0; i < 256; i++) {
+                    red[i]=(short)Math.round(((cdfxR[i]-minCdfxR)/(1-minCdfxR))*255);
+                    green[i]=(short)Math.round(((cdfxG[i]-minCdfxG)/(1-minCdfxG))*255);
+                    blue[i]=(short)Math.round(((cdfxB[i]-minCdfxB)/(1-minCdfxB))*255);
+                    //System.out.println(i+"i: "+cdfxR[i]+" "+minCdfxR+" "+(short)Math.round(((cdfxR[i]-minCdfxR)/(1-minCdfxR))*255));
+
+        }
+
+        short[][] data = new short[][] {
+             red, green, blue
+        };
+                LookupTable lookupTable = new ShortLookupTable(0, data);
+                LookupOp op = new LookupOp(lookupTable, null);      
+                imageBoxer.image=ImageBoxer.convertColorspace(imageBoxer.image,BufferedImage.TYPE_INT_RGB);
+                //BufferedImage temp=imageBoxer.image;
+                imageBoxer.image=op.filter(imageBoxer.image, imageBoxer.image);
+                imageBoxer.repaint();
+                //przelicz();
+        
     }
     
     private void przelicz(){
@@ -331,7 +402,8 @@ public class HistogramFrame extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        przytnij();
+        //rozciagnij();
+        normalizuj();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
