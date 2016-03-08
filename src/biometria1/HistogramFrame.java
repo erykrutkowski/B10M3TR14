@@ -93,8 +93,8 @@ public class HistogramFrame extends javax.swing.JFrame {
                 imageBoxer.repaint();
     }
     private void przytnij(){
-        short a=3;
-        short b=252;
+        short a=2;
+        short b=253;
         short[] red = new short[256];
         short[] green = new short[256];
         short[] blue = new short[256];
@@ -102,16 +102,19 @@ public class HistogramFrame extends javax.swing.JFrame {
 
             //if((i>a)&&(i<b)){
                 //red[i]=green[i]=blue[i]=i;
-                                short k=(short)(((255-b)-(i%(255-b)))-(a-(i%a)));
-                System.out.println(i+" "+k);
+                                short k;
                 if(i<(short)((a+b)/2)){
-                    if(i-(a-(i%a))>0) red[i]=green[i]=blue[i]=(short)(i-(a-(i%a)));
+                    k=(short)(a-(i/(((a+b)/2)/a)));//(((a+b)/2)/a)(a-(i%a)));
+                    if(i-k>0) red[i]=green[i]=blue[i]=(short)(i-k);
                     else red[i]=green[i]=blue[i]=(short)0;
                 }
                 else {
-                    if(i+((255-b)-(i%(255-b)))<256)red[i]=green[i]=blue[i]=(short)(i+((255-b)-(i%(255-b))));
+                    k=(short)((255-b)-(i/(((a+b)/2)/(255-b))));
+                    if(i-k<256)red[i]=green[i]=blue[i]=(short)(i-k);
                     else red[i]=green[i]=blue[i]=(short)256;
                 }
+                                //System.out.println(i+" "+k);
+
             //}
             //else{
              //  red[i]=green[i]=blue[i]=(short)(255-i);
